@@ -1,5 +1,6 @@
 package ciir.yggdrasil.chemistry.experiments;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.lemurproject.galago.utility.Parameters;
 
@@ -13,24 +14,26 @@ import static org.junit.Assert.assertFalse;
 public class QuestionContextModelTest {
   @Test
   public void lookForQuestionMark() throws IOException {
-    String originalQuestion = "This is the first sentence of setup. This is the second sentence. What should I remember?\n" +
-      "A - Something here\nB - Something else\nC - Third thing\nD - Correct answer.";
+    String originalQuestion = "This is the first sentence of setup. This is the second sentence. What should I remember?\n"
+        + "A - Something here\nB - Something else\nC - Third thing\nD - Correct answer.";
 
     List<String> originalTokens = QuestionContextModelParser.sentenceSplitter(originalQuestion);
     assertEquals("This is the first sentence of setup", originalTokens.get(0));
     assertEquals(".", originalTokens.get(1));
     assertEquals("B - Something else", originalTokens.get(8));
 
-    String questionStatement = QuestionContextModelParser.extractQuestionPieces(originalQuestion).get("question-statement");
+    String questionStatement = QuestionContextModelParser.extractQuestionPieces(originalQuestion)
+        .get("question-statement");
     assertEquals("What should I remember?", questionStatement);
   }
 
   @Test
+  @Ignore("Needs data to run.")
   public void breadthTest() throws IOException {
     // Make sure we don't crash on any inputs.
     try (ExperimentResources resources = new ExperimentResources(ExperimentCommon.DefaultParameters)) {
       for (Parameters question : resources.getAllQuestions()) {
-        Map<String,String> qparts = QuestionContextModelParser.extractQuestionPieces(question.getString("text"));
+        Map<String, String> qparts = QuestionContextModelParser.extractQuestionPieces(question.getString("text"));
         assertFalse(qparts.isEmpty());
       }
     }

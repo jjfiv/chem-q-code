@@ -14,6 +14,7 @@ import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import gnu.trove.procedure.TObjectIntProcedure;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.lemurproject.galago.utility.Parameters;
 
 import java.io.File;
@@ -29,13 +30,14 @@ public class ExperimentResourcesTest {
   public static boolean loud = false;
 
   @Test
+  @Ignore("Needs data to run.")
   public void testHierarchy() throws IOException {
     try (final ExperimentResources resources = new ExperimentResources(ExperimentCommon.DefaultParameters)) {
       MergedHierarchy mh = resources.getHierarchy();
 
       for (MHNode mhNode : mh.getNodes()) {
         assertNotNull(mhNode.children);
-        if(mhNode.parent == null) {
+        if (mhNode.parent == null) {
           assertTrue(mhNode.children.size() > 0);
           for (MHNode child : mhNode.children) {
             assertNotNull(child);
@@ -45,7 +47,7 @@ public class ExperimentResourcesTest {
 
       TObjectIntHashMap<String> nodeFrequencies = new TObjectIntHashMap<>();
       for (MHNode mhNode : mh.getNodes()) {
-        if(mhNode.level == 4) {
+        if (mhNode.level == 4) {
           nodeFrequencies.put(mhNode.id, 0);
         }
       }
@@ -55,12 +57,8 @@ public class ExperimentResourcesTest {
         }
       }
 
-
-
-      ChaiIterable<Pair<Integer, Integer>> pairs = ChaiIterable
-          .create(ArrayFns.toList(nodeFrequencies.values()))
-          .groupBy(Fns.<Integer>identity())
-          .mapValues(new TransformFn<List<Integer>, Integer>() {
+      ChaiIterable<Pair<Integer, Integer>> pairs = ChaiIterable.create(ArrayFns.toList(nodeFrequencies.values()))
+          .groupBy(Fns.<Integer>identity()).mapValues(new TransformFn<List<Integer>, Integer>() {
             @Override
             public Integer transform(List<Integer> input) {
               return input.size();
@@ -68,10 +66,10 @@ public class ExperimentResourcesTest {
           }).pairs();
 
       for (Pair<Integer, Integer> pt : pairs) {
-        System.out.println(pt.left +"\t"+pt.right);
+        System.out.println(pt.left + "\t" + pt.right);
       }
 
-      if(loud) {
+      if (loud) {
         nodeFrequencies.forEachEntry(new TObjectIntProcedure<String>() {
           @Override
           public boolean execute(String a, int b) {
@@ -86,6 +84,7 @@ public class ExperimentResourcesTest {
   }
 
   @Test
+  @Ignore("Needs data to run.")
   public void testGetHierarchyCounts() throws IOException {
     try (final ExperimentResources resources = new ExperimentResources(ExperimentCommon.DefaultParameters)) {
       MergedHierarchy mh = resources.getHierarchy();
@@ -96,25 +95,24 @@ public class ExperimentResourcesTest {
       int sum = 0;
       int total = 0;
       for (MHNode mhNode : mh.getNodes()) {
-        if(mhNode.level == 1) System.out.println(mhNode.title);
-        if(mhNode.level == 1) System.out.println(mhNode.description);
-        levelCounts.adjustOrPutValue(mhNode.level,1,1);
-        childrenCounts.adjustOrPutValue(mhNode.children.size(),1,1);
+        if (mhNode.level == 1)
+          System.out.println(mhNode.title);
+        if (mhNode.level == 1)
+          System.out.println(mhNode.description);
+        levelCounts.adjustOrPutValue(mhNode.level, 1, 1);
+        childrenCounts.adjustOrPutValue(mhNode.children.size(), 1, 1);
         ++total;
 
-        sum +=new HashSet<>(resources.tokenizer.tokenize(mhNode.description).terms).size();
+        sum += new HashSet<>(resources.tokenizer.tokenize(mhNode.description).terms).size();
       }
 
-      System.out.println(Parameters.parseArray(
-          "total", total,
-          "avgLength", ((double) sum) / ((double) total),
-          "levelCounts", levelCounts.toString(),
-          "childrenCounts", childrenCounts.toString()
-      ));
+      System.out.println(Parameters.parseArray("total", total, "avgLength", ((double) sum) / ((double) total),
+          "levelCounts", levelCounts.toString(), "childrenCounts", childrenCounts.toString()));
     }
   }
 
   @Test
+  @Ignore("Needs data to run.")
   public void dumpRandomStackOverflowQuestion() {
     String basePath = "/home/jfoley/Downloads/chemistry.stackexchange.com/";
     List<Parameters> posts = PostParser.loadRowsFromFile(basePath + File.separator + PostParser.PostsFile);
