@@ -1,3 +1,6 @@
 [submodule "deps/galago"]
 	path = deps/galago
 	url = git@github.com:jjfiv/galago-git.git
+[submodule "deps/chai"]
+	path = deps/chai
+	url = git@github.com:jjfiv/chai.git
